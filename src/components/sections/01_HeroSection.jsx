@@ -1,9 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import AuroraBackground from '../ui/AuroraBackground';
 
 export default function HeroSection() {
   const [liveStats, setLiveStats] = useState({ leads: 47, emails: 23, meetings: 8, calls: 2 });
+  const containerRef = useRef(null);
+
+  const { scrollY } = useScroll();
+
+  // Map absolute scroll pixels from top of page
+  // At scroll 0 (on load), fully slanted and scaled down.
+  // At scroll 600px (scrolling down), fully flat and 100% scale.
+  const rotateX = useTransform(scrollY, [0, 600], [25, 0]);
+  const scale = useTransform(scrollY, [0, 600], [0.85, 1]);
+  const opacity = useTransform(scrollY, [0, 300], [0.4, 1]);
+  const y = useTransform(scrollY, [0, 600], [-80, 0]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -30,7 +41,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="min-h-[100svh] relative flex flex-col items-center justify-start pt-[96px] pb-0 text-center overflow-hidden">
+    <section ref={containerRef} className="min-h-[100svh] relative flex flex-col items-center justify-start pt-[96px] pb-0 text-center overflow-hidden">
       <AuroraBackground />
       
       <div className="relative z-10 max-w-[820px] mx-auto px-6 w-full flex flex-col items-center">
@@ -103,16 +114,21 @@ export default function HeroSection() {
         </motion.div>
       </div>
 
-      {/* HERO PRODUCT MOCKUP */}
-      <motion.div 
-        initial={{ opacity: 0, y: 60, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1.0, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="relative mt-16 max-w-[1180px] w-full mx-auto px-4 z-10"
+      {/* HERO PRODUCT MOCKUP WITH PERSPECTIVE SCROLL */}
+      <div 
+        className="relative mt-32 max-w-[1180px] w-full mx-auto px-4 z-10"
+        style={{ perspective: "1500px" }}
       >
-        <div className="absolute bottom-0 left-0 right-0 h-[280px] z-20 pointer-events-none bg-gradient-to-b from-transparent to-bg"></div>
-
-        <div className="glass-card rounded-[20px] overflow-hidden border border-[rgba(123,111,212,0.25)] shadow-[0_0_0_1px_rgba(196,192,232,0.05),0_60px_120px_rgba(0,0,0,0.7),0_0_80px_rgba(91,79,190,0.15)] bg-bg-card">
+        <motion.div 
+          style={{ 
+            rotateX, 
+            scale, 
+            opacity,
+            y,
+            transformOrigin: "top center" 
+          }}
+          className="glass-card rounded-[20px] overflow-hidden border border-[rgba(123,111,212,0.25)] shadow-[0_0_0_1px_rgba(196,192,232,0.05),0_60px_120px_rgba(0,0,0,0.7),0_0_80px_rgba(91,79,190,0.15)] bg-bg-card transition-shadow duration-[0.5s]"
+        >
           {/* Browser Chrome */}
           <div className="h-10 bg-[rgba(0,0,0,0.5)] flex items-center justify-between px-4">
             <div className="flex gap-1.5">
@@ -239,8 +255,8 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }

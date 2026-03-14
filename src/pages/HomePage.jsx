@@ -4,7 +4,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import HeroSection from '../components/sections/01_HeroSection';
 import LogoBar from '../components/sections/02_LogoBar';
-import BentoFeatures from '../components/sections/03_BentoFeatures';
+import StickyScrollFeatures from '../components/sections/03_StickyScrollFeatures';
 import TestimonialsScroll from '../components/sections/04_TestimonialsScroll';
 import Integrations from '../components/sections/05_Integrations';
 import AgentFleet from '../components/sections/06_AgentFleet';
@@ -23,7 +23,7 @@ export default function HomePage() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.9 }}>
-          <BentoFeatures />
+          <StickyScrollFeatures />
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8 }}>
